@@ -31,7 +31,7 @@ class AppFixtures extends Fixture
             $description = $faker->sentences(rand(1, 5), true);
             if (strlen($description) >= 255 ){
                 $description = substr($description, 0, 255);
-            }
+            };
 
             $phone = (new Phone())
                 ->setModel($faker->word() . " " . rand(1, 20))
