@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\CustomerRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
 class Customer
@@ -11,28 +12,36 @@ class Customer
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["getAllCustomersOfAUser", "getCustomerDetail"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(["getAllCustomersOfAUser", "getCustomerDetail"])]
     private ?string $name = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(["getAllCustomersOfAUser", "getCustomerDetail"])]
     private ?string $fistName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(["getCustomerDetail"])]
     private ?string $adress = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(["getCustomerDetail"])]
     private ?int $postCode = null;
 
     #[ORM\Column(length: 50, nullable: true)]
+    #[Groups(["getCustomerDetail"])]
     private ?string $city = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["getAllCustomersOfAUser", "getCustomerDetail"])]
     private ?string $email = null;
 
     #[ORM\ManyToOne(inversedBy: 'customers')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(["getCustomerDetail"])]
     private ?User $user = null;
 
 
