@@ -16,6 +16,9 @@ class Customer
     #[ORM\Column(length: 50)]
     private ?string $name = null;
 
+    #[ORM\Column(length: 50)]
+    private ?string $fistName = null;
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $adress = null;
 
@@ -32,6 +35,7 @@ class Customer
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
+
     public function getId(): ?int
     {
         return $this->id;
@@ -45,6 +49,18 @@ class Customer
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getFistName(): ?string
+    {
+        return $this->fistName;
+    }
+
+    public function setFistName(string $fistName): static
+    {
+        $this->fistName = $fistName;
 
         return $this;
     }
@@ -108,4 +124,6 @@ class Customer
 
         return $this;
     }
+
+
 }
