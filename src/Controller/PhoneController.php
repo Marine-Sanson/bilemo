@@ -10,6 +10,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Contracts\Cache\ItemInterface;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 class PhoneController extends AbstractController
 {
@@ -21,12 +23,17 @@ class PhoneController extends AbstractController
     { }
 
     #[Route('/api/phones', name: 'phones', methods: ['GET'])]
-    public function getAllPhones(Request $request): JsonResponse
+    public function getAllPhones(Request $request, TagAwareCacheInterface $cachePool): JsonResponse
     {
         $page = $request->get('page', 1);
         $limit = $request->get('limit', 5);
 
-        $phonesList = $this->phoneRepository->findAllWithPagination($page, $limit);
+        $idCache = "getAllPhones-" . $page . "-" . $limit;
+        $phonesList = $cachePool->get($idCache, function (ItemInterface $item) use ($page, $limit) {
+            $item->tag("phoneCache");
+            return $this->phoneRepository->findAllWithPagination($page, $limit);
+        });
+
         $jsonPhonesList = $this->serializer->serialize($phonesList, 'json', ['groups' => 'getPhones']);
         // return $this->json($jsonPhonesList, 200);
         return new JsonResponse($jsonPhonesList, Response::HTTP_OK, [], true);
@@ -36,7 +43,9 @@ class PhoneController extends AbstractController
     public function getDetailPhones(Phone $phone): JsonResponse
     {
         $jsonPhone = $this->serializer->serialize($phone, 'json');
-        return $this->json($jsonPhone, 200, ['accept' => 'json']);
+        // return $this->json($jsonPhone, 200, ['accept' => 'json']);
+        return new JsonResponse($jsonPhone, Response::HTTP_OK, ['accept' => 'json'], true);
+
     }
 
 }

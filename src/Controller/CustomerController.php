@@ -34,7 +34,6 @@ class CustomerController extends AbstractController
         $jsonCustomersList = $this->serializer->serialize($customersList, 'json', ['groups' => 'getCustomerDetail']);
         // return $this->json($jsonPhonesList, 200);
         return new JsonResponse($jsonCustomersList, Response::HTTP_OK, [], true);
-
     }
 
 
