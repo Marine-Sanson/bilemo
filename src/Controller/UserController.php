@@ -26,9 +26,30 @@ class UserController extends AbstractController
     )
     { }
 
+    /**
+     * Cette methode permet d'aller chercher tous les utilisateurs liès à un client à partir son id
+     *
+     * @Route("api/users/{id}/customers", methods={"GET"})
+     * 
+     * @OA\Response(
+     *     response=200,
+     *     description="Retourne tous les utilisateurs liès à un client",
+     *     @OA\JsonContent(
+     *        type="array",
+     *        @OA\Items(ref=@Model(type=Customer::class))
+     *     )
+     * )
+     * @OA\Tag(name="Customer")
+     *
+     * @param int $id idUser
+     * @param TagAwareCacheInterface $cachePool
+     * 
+     * @return JsonResponse
+     */
     #[Route('/api/users/{id}/customers', name: 'users_customers', methods: ['GET'])]
     public function getAllCustomersOfAUser(int $id, Request $request, TagAwareCacheInterface $cachePool): JsonResponse
     {
+
         $page = $request->get('page', 1);
         $limit = $request->get('limit', 5);
 
@@ -45,6 +66,7 @@ class UserController extends AbstractController
         $jsonCustomersList = $this->serializer->serialize($customersList, 'json', $context);
         // return $this->json($jsonCustomersList, 200);
         return new JsonResponse($jsonCustomersList, Response::HTTP_OK, [], true);
+
     }
 
 }
