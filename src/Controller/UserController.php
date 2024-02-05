@@ -11,8 +11,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Contracts\Cache\TagAwareCacheInterface;
-use Symfony\Component\Serializer\SerializerInterface;
+use JMS\Serializer\SerializerInterface;
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\Serializer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Hateoas\Configuration\Annotation as Hateoas;
 
 class UserController extends AbstractController
 {
@@ -37,7 +40,9 @@ class UserController extends AbstractController
 
             return $this->customerRepository->findByUserWithPagination($user, $page, $limit);
         });
-        $jsonCustomersList = $this->serializer->serialize($customersList, 'json', ['groups' => 'getAllCustomersOfAUser']);
+        $context = SerializationContext::create()->setGroups(['getAllCustomersOfAUser']);
+
+        $jsonCustomersList = $this->serializer->serialize($customersList, 'json', $context);
         // return $this->json($jsonCustomersList, 200);
         return new JsonResponse($jsonCustomersList, Response::HTTP_OK, [], true);
     }

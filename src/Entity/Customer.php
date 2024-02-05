@@ -4,44 +4,65 @@ namespace App\Entity;
 
 use App\Repository\CustomerRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\Groups;
+use Hateoas\Configuration\Annotation as Hateoas;
 
+/**
+ * @Hateoas\Relation(
+ *      "self",
+ *      href = @Hateoas\Route(
+ *          "detailCustomer",
+ *          parameters = { "id" = "expr(object.getId())" }
+ *      ),
+ *      exclusion = @Hateoas\Exclusion(groups="getAllCustomersOfAUser")
+ * )
+ * 
+ *  * @Hateoas\Relation(
+ *      "delete",
+ *      href = @Hateoas\Route(
+ *          "deleteCustomer",
+ *          parameters = { "id" = "expr(object.getId())" },
+ *      ),
+ *      exclusion = @Hateoas\Exclusion(groups="getAllCustomersOfAUser", excludeIf = "expr(not is_granted('ROLE_ADMIN'))"),
+ * )
+ *
+ */
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
 class Customer
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["getAllCustomersOfAUser", "getCustomerDetail"])]
+    #[Groups(["getAllCustomersOfAUser", "getDetailCustomer"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(["getAllCustomersOfAUser", "getCustomerDetail"])]
+    #[Groups(["getAllCustomersOfAUser", "getDetailCustomer"])]
     private ?string $name = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(["getAllCustomersOfAUser", "getCustomerDetail"])]
+    #[Groups(["getAllCustomersOfAUser", "getDetailCustomer"])]
     private ?string $fistName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(["getCustomerDetail"])]
+    #[Groups(["getDetailCustomer"])]
     private ?string $adress = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(["getCustomerDetail"])]
+    #[Groups(["getDetailCustomer"])]
     private ?int $postCode = null;
 
     #[ORM\Column(length: 50, nullable: true)]
-    #[Groups(["getCustomerDetail"])]
+    #[Groups(["getDetailCustomer"])]
     private ?string $city = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["getAllCustomersOfAUser", "getCustomerDetail"])]
+    #[Groups(["getAllCustomersOfAUser", "getDetailCustomer"])]
     private ?string $email = null;
 
     #[ORM\ManyToOne(inversedBy: 'customers')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(["getCustomerDetail"])]
+    #[Groups(["getDetailCustomer"])]
     private ?User $user = null;
 
 
