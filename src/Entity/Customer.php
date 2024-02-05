@@ -6,6 +6,7 @@ use App\Repository\CustomerRepository;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
 use Hateoas\Configuration\Annotation as Hateoas;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @Hateoas\Relation(
@@ -38,10 +39,14 @@ class Customer
 
     #[ORM\Column(length: 50)]
     #[Groups(["getAllCustomersOfAUser", "getDetailCustomer"])]
+    #[Assert\NotBlank(message: "Votre nom est obligatoire")]
+    #[Assert\Length(min: 1, max: 50, minMessage: "Votre nom doit faire au moins {{ limit }} caractères", maxMessage: "Votre nom ne peut pas faire plus de {{ limit }} caractères")]
     private ?string $name = null;
 
     #[ORM\Column(length: 50)]
     #[Groups(["getAllCustomersOfAUser", "getDetailCustomer"])]
+    #[Assert\NotBlank(message: "Votre prénom est obligatoire")]
+    #[Assert\Length(min: 1, max: 50, minMessage: "Votre prénom doit faire au moins {{ limit }} caractères", maxMessage: "Votre prénom ne peut pas faire plus de {{ limit }} caractères")]
     private ?string $fistName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -58,6 +63,8 @@ class Customer
 
     #[ORM\Column(length: 255)]
     #[Groups(["getAllCustomersOfAUser", "getDetailCustomer"])]
+    #[Assert\NotBlank(message: "Votre email est obligatoire")]
+    #[Assert\Length(min: 5, max: 255, minMessage: "Votre email doit faire au moins {{ limit }} caractères", maxMessage: "Votre email ne peut pas faire plus de {{ limit }} caractères")]
     private ?string $email = null;
 
     #[ORM\ManyToOne(inversedBy: 'customers')]
