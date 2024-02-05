@@ -50,6 +50,16 @@ class AppFixtures extends Fixture
             $manager->flush();
         }
 
+        $admin = (new User())
+            ->setUsername("adminBilemo")
+            ->setRoles(["ROLE_ADMIN"]);
+    
+        $password = $this->userPasswordHasher->hashPassword($admin, 'mdpass');
+        $admin->setPassword($password);
+        
+        $manager->persist($admin);
+        $manager->flush();
+
         $listUsers = [];
         for ($i = 0; $i <5; $i++) {
             $role = ["ROLE_USER"];

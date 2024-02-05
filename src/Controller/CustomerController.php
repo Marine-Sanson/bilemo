@@ -29,6 +29,25 @@ class CustomerController extends AbstractController
     )
     {}
 
+    /**
+     * Cette methode permet d'aller chercher le détail d'un utilisateur à partir son id
+     * 
+     * @Route("api/customers/{id}", methods={"GET"})
+     * 
+     * @OA\Response(
+     *     response=200,
+     *     description="Retourne le détail d'un téléphone",
+     *     @OA\JsonContent(
+     *        type="array",
+     *        @OA\Items(ref=@Model(type=Customer::class))
+     *     )
+     * )
+     * @OA\Tag(name="Customer")
+     *
+     * @param Customer $customer Customer
+     * 
+     * @return JsonResponse
+     */
     #[Route('/api/customers/{id}', name: 'detailCustomer', methods: ['GET'])]
     public function getDetailCustomer(Customer $customer): JsonResponse
     {
@@ -41,7 +60,25 @@ class CustomerController extends AbstractController
         
     }
 
-
+    /**
+     * Cette methode permet de créer un nouvel utilisateur et de le lier à un client
+     * 
+     * @Route("api/customers/{id}", methods={"POST"})
+     * 
+     * @OA\Response(
+     *     response=200,
+     *     description="Retourne le détail d'un téléphone",
+     *     @OA\JsonContent(
+     *        type="array",
+     *        @OA\Items(ref=@Model(type=Customer::class))
+     *     )
+     * )
+     * @OA\Tag(name="Customer")
+     *
+     * @param Customer $customer Customer
+     * 
+     * @return JsonResponse
+     */
     #[Route('/api/customers', name: 'newCustomer', methods: ['POST'])]
     public function newCustomer(Request $request): JsonResponse
     {
@@ -60,7 +97,24 @@ class CustomerController extends AbstractController
         return new JsonResponse($jsonCustomer, Response::HTTP_CREATED, ["Location" => $location], true);
 
     }
-    
+
+    /**
+     * Cette methode permet de supprimer un utilisateur à partir son id
+     * 
+     * @Route("api/customers/{id}", methods={"DELETE"})
+     * 
+     * @OA\Response(
+     *     response=201,
+     *     description="Supprime un utilisateur",
+     *     @OA\JsonContent(
+     *        type="array",
+     *        @OA\Items(ref=@Model(type=Customer::class))
+     *     )
+     * )
+     * @OA\Tag(name="Customer")
+     *
+     * @param Customer $customer Customer
+     */
     #[Route('/api/customers/{id}', name: 'deleteCustomer', methods: ['DELETE'])]
     public function deleteCustomer(Customer $customer): JsonResponse
     {
@@ -69,7 +123,7 @@ class CustomerController extends AbstractController
         $this->em->flush();
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
-    }
 
+    }
 
 }
