@@ -55,7 +55,7 @@ class CustomerController extends AbstractController
         $this->em->flush();
         $context = SerializationContext::create()->setGroups(['getDetailCustomer']);
         $jsonCustomer = $this->serializer->serialize($customer, 'json', $context);
-        $location = $this->urlGenerator->generate('customer_detail', ['id' => $customer->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
+        $location = $this->urlGenerator->generate('detailCustomer', ['id' => $customer->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
 
         return new JsonResponse($jsonCustomer, Response::HTTP_CREATED, ["Location" => $location], true);
 
