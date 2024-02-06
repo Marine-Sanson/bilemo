@@ -3,26 +3,24 @@
 namespace App\Controller;
 
 use App\Entity\Phone;
-use App\Repository\PhoneRepository;
+use App\Service\PhoneService;
+use OpenApi\Annotations as OA;
+use JMS\Serializer\SerializerInterface;
+use JMS\Serializer\SerializationContext;
+use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use JMS\Serializer\SerializerInterface;
-use JMS\Serializer\SerializationContext;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Contracts\Cache\ItemInterface;
-use Symfony\Contracts\Cache\TagAwareCacheInterface;
 use Hateoas\Configuration\Annotation as Hateoas;
-use Nelmio\ApiDocBundle\Annotation\Model;
-use Nelmio\ApiDocBundle\Annotation\Security;
-use OpenApi\Annotations as OA;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class PhoneController extends AbstractController
 {
 
     public function __construct(
-        private readonly PhoneRepository $phoneRepository,
+        private readonly PhoneService $phoneService,
         private readonly SerializerInterface $serializer,
     )
     { }
@@ -38,6 +36,7 @@ class PhoneController extends AbstractController
      *        @OA\Items(ref=@Model(type=Phone::class, groups={"getPhones"}))
      *     )
      * )
+     * 
      * @OA\Parameter(
      *     name="page",
      *     in="query",
@@ -51,6 +50,7 @@ class PhoneController extends AbstractController
      *     description="Le nombre d'éléments que l'on veut récupérer",
      *     @OA\Schema(type="int")
      * )
+     * 
      * @OA\Tag(name="Phone")
      *
      * @param Request $request
@@ -69,7 +69,7 @@ class PhoneController extends AbstractController
         $idCache = "getAllPhones-" . $page . "-" . $limit;
         $phonesList = $cachePool->get($idCache, function (ItemInterface $item) use ($page, $limit) {
             $item->tag("phoneCache");
-            return $this->phoneRepository->findAllWithPagination($page, $limit);
+            return $this->phoneService->findAllWithPagination($page, $limit);
         });
         $jsonPhonesList = $this->serializer->serialize($phonesList, 'json', $context);
         // return $this->json($jsonPhonesList, 200);

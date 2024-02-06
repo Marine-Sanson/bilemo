@@ -32,6 +32,22 @@ class CustomerRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function saveCustomer(Customer $customer): ?Customer
+    {
+
+        $this->getEntityManager()->persist($customer);
+        $this->getEntityManager()->flush();
+    
+        return $customer;
+    
+    }
+
+    public function deleteCustomer(Customer $customer):void
+    {
+        $this->getEntityManager()->remove($customer);
+        $this->getEntityManager()->flush();
+    }
+
 //    /**
 //     * @return Customer[] Returns an array of Customer objects
 //     */
