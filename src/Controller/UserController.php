@@ -2,26 +2,25 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
-use App\Repository\UserRepository;
-use App\Repository\CustomerRepository;
+use App\Service\UserService;
+use OpenApi\Annotations as OA;
+use App\Service\CustomerService;
+use JMS\Serializer\SerializerInterface;
+use JMS\Serializer\SerializationContext;
 use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Hateoas\Configuration\Annotation as Hateoas;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Contracts\Cache\TagAwareCacheInterface;
-use JMS\Serializer\SerializerInterface;
-use JMS\Serializer\SerializationContext;
-use JMS\Serializer\Serializer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Hateoas\Configuration\Annotation as Hateoas;
 
 class UserController extends AbstractController
 {
     public function __construct(
-        private readonly CustomerRepository $customerRepository,
-        private readonly UserRepository $userRepository,
+        private readonly CustomerService $customerService,
+        private readonly UserService $userService,
         private readonly SerializerInterface $serializer,
     )
     { }
@@ -29,8 +28,6 @@ class UserController extends AbstractController
     /**
      * Cette methode permet d'aller chercher tous les utilisateurs liès à un client à partir son id
      *
-     * @Route("api/users/{id}/customers", methods={"GET"})
-     * 
      * @OA\Response(
      *     response=200,
      *     description="Retourne tous les utilisateurs liès à un client",
@@ -39,6 +36,21 @@ class UserController extends AbstractController
      *        @OA\Items(ref=@Model(type=Customer::class))
      *     )
      * )
+     * 
+     * @OA\Parameter(
+     *     name="page",
+     *     in="query",
+     *     description="La page que l'on veut récupérer",
+     *     @OA\Schema(type="int")
+     * )
+     *
+     * @OA\Parameter(
+     *     name="limit",
+     *     in="query",
+     *     description="Le nombre d'éléments que l'on veut récupérer",
+     *     @OA\Schema(type="int")
+     * )
+     * 
      * @OA\Tag(name="Customer")
      *
      * @param int $id idUser
@@ -55,11 +67,11 @@ class UserController extends AbstractController
 
         $idCache = "getAllPhones-" . $page . "-" . $limit;
 
-        $user = $this->userRepository->findOneById($id);
+        $user = $this->userService->findOneById($id);
         $customersList = $cachePool->get($idCache, function (ItemInterface $item) use ($user, $page, $limit) {
             $item->tag("customerCache");
 
-            return $this->customerRepository->findByUserWithPagination($user, $page, $limit);
+            return $this->customerService->findByUserWithPagination($user, $page, $limit);
         });
         $context = SerializationContext::create()->setGroups(['getAllCustomersOfAUser']);
 
