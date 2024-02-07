@@ -52,6 +52,7 @@ class UserController extends AbstractController
      * )
      * 
      * @OA\Tag(name="Customer")
+     * @Security(name="Bearer")
      *
      * @param int $id idUser
      * @param TagAwareCacheInterface $cachePool

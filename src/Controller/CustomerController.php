@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Customer;
 use App\Service\UserService;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Annotations as OA;
 use App\Service\CustomerService;
 use JMS\Serializer\SerializerInterface;
@@ -30,7 +32,6 @@ class CustomerController extends AbstractController
      * Cette methode permet d'aller chercher le détail d'un utilisateur à partir son id
      * 
      * @Route("api/customers/{id}", methods={"GET"})
-     * 
      * @OA\Response(
      *     response=200,
      *     description="Retourne le détail d'un téléphone",
@@ -40,6 +41,7 @@ class CustomerController extends AbstractController
      *     )
      * )
      * @OA\Tag(name="Customer")
+     * @Security(name="Bearer")
      *
      * @param Customer $customer Customer
      * 
@@ -51,7 +53,6 @@ class CustomerController extends AbstractController
 
         $context = SerializationContext::create()->setGroups(['getDetailCustomer']);
         $jsonCustomer = $this->serializer->serialize($customer, 'json', $context);
-        // return $this->json($jsonPhonesList, 200);
         return new JsonResponse($jsonCustomer, Response::HTTP_OK, [], true);
         
     }
@@ -60,10 +61,9 @@ class CustomerController extends AbstractController
      * Cette methode permet de créer un nouvel utilisateur et de le lier à un client
      * 
      * @Route("api/customers/{id}", methods={"POST"})
-     * 
      * @OA\Response(
      *     response=200,
-     *     description="Retourne le détail d'un téléphone",
+     *     description="création un nouvel utilisateur",
      *     @OA\JsonContent(
      *        type="array",
      *        @OA\Items(ref=@Model(type=Customer::class))
@@ -98,7 +98,6 @@ class CustomerController extends AbstractController
      * Cette methode permet de supprimer un utilisateur à partir son id
      * 
      * @Route("api/customers/{id}", methods={"DELETE"})
-     * 
      * @OA\Response(
      *     response=201,
      *     description="Supprime un utilisateur",
@@ -108,6 +107,7 @@ class CustomerController extends AbstractController
      *     )
      * )
      * @OA\Tag(name="Customer")
+     * @Security(name="Bearer")
      *
      * @param Customer $customer Customer
      */

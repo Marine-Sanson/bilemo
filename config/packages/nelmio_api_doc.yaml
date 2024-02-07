@@ -17,9 +17,9 @@ nelmio_api_doc:
         paths:
             /api/login_check:
                 post:
-                    operationId: postCredentialsItem
                     tags:
                         - Token
+                    operationId: postCredentialsItem
                     summary: Permet d'obtenir le token JWT pour se logger.
                     requestBody:
                         description: Crée un nouveau token JWT
@@ -34,6 +34,42 @@ nelmio_api_doc:
                                 application/json:
                                     schema:
                                         $ref: '#/components/schemas/Token'
+            /api/phones:
+                get:
+                    tags:
+                        - Phones
+                    summary: Récupère la liste des téléphones
+                    parameters:
+                        - in: path
+                          name: page
+                          schema:
+                              type: integer
+                          required: true
+                          description: Numeric ID
+                        - in: path
+                          name: limit
+                          schema:
+                              type: integer
+                          required: true
+                          description: Numeric ID
+            /api/phones/{id}:
+                get:
+                    tags:
+                        - Phones
+                    summary: Récupère le détail d'un téléphone
+            /api/customers/{id}:
+                get:
+                    tags:
+                        - Customers
+                    summary: Récupère le détail d'un utilisateur
+                    parameters:
+                        - in: path
+                          name: phoneId
+                          schema:
+                              type: integer
+                          required: true
+                          description: Numeric ID
+
         components:
             schemas:
                 Token:
@@ -61,3 +97,5 @@ nelmio_api_doc:
     areas: # to filter documented areas
         path_patterns:
             - ^/api(?!/doc$) # Accepts routes under /api except /api/doc
+        # host_patterns: # document only routes with a host of the form api.*
+        #     - ^api\.

@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Phone;
 use App\Service\PhoneService;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Annotations as OA;
 use JMS\Serializer\SerializerInterface;
 use JMS\Serializer\SerializationContext;
@@ -28,6 +30,8 @@ class PhoneController extends AbstractController
     /**
      * Cette methode permet de consulter l'ensemble des téléphones
      * 
+     * @Route("api/phones", methods={"GET"})
+     * 
      * @OA\Response(
      *     response=200,
      *     description="Retourne la liste des téléphones",
@@ -36,27 +40,22 @@ class PhoneController extends AbstractController
      *        @OA\Items(ref=@Model(type=Phone::class, groups={"getPhones"}))
      *     )
      * )
-     * 
      * @OA\Parameter(
      *     name="page",
      *     in="query",
      *     description="La page que l'on veut récupérer",
      *     @OA\Schema(type="int")
      * )
-     *
+     * 
      * @OA\Parameter(
      *     name="limit",
      *     in="query",
      *     description="Le nombre d'éléments que l'on veut récupérer",
      *     @OA\Schema(type="int")
      * )
-     * 
      * @OA\Tag(name="Phone")
-     *
-     * @param Request $request
-     * @param TagAwareCacheInterface $cachePool
-     * 
      * @return JsonResponse
+     *
      */
     #[Route('/api/phones', name: 'phones', methods: ['GET'])]
     public function getAllPhones(Request $request, TagAwareCacheInterface $cachePool): JsonResponse
@@ -80,7 +79,6 @@ class PhoneController extends AbstractController
      * Cette methode permet d'aller chercher le détail d'un téléphone à partir son id
      * 
      * @Route("api/phones/{id}", methods={"GET"})
-     * 
      * @OA\Response(
      *     response=200,
      *     description="Retourne le détail d'un téléphone",
