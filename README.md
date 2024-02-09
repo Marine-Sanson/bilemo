@@ -1,4 +1,4 @@
-# Snowtricks
+# Bilemo - API Rest
 Project for OpenClasssrooms : create an API Rest
 
 <div align="center">
