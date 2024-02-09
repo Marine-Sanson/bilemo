@@ -12,7 +12,7 @@ Project for OpenClasssrooms : create an API Rest
 
 ### Main languages :
 
-<img src="https://img.shields.io/badge/php-8.3.1-%23777BB4?logo=php" alt="php banner"> <img src="https://img.shields.io/badge/symfony-6.4-%25%23000000%3F?logo=symfony" alt="Static Badge">
+<img src="https://img.shields.io/badge/php-8.3.1-%23777BB4?logo=php" alt="php banner"> <img src="https://img.shields.io/badge/symfony-7.0-%25%23000000%3F?logo=symfony" alt="Static Badge">
 
 
 ### Database :
