@@ -84,7 +84,7 @@ class PhoneController extends AbstractController
         )
     )]
     #[OA\Tag(name: 'Phone')]
-    public function getDetailPhones(Phone $phone): JsonResponse
+    public function getDetailPhone(Phone $phone): JsonResponse
     {
         $jsonPhone = $this->serializer->serialize($phone, 'json');
         // return $this->json($jsonPhone, 200, ['accept' => 'json']);

@@ -93,7 +93,7 @@ class CustomerController extends AbstractController
      */
     #[Route('/api/customers/{id}', name: 'deleteCustomer', methods: ['DELETE'])]
     #[OA\Response(
-        response: 201,
+        response: 204,
         description: 'Supprime un utilisateur',
         content: new OA\JsonContent(
             type: 'array',

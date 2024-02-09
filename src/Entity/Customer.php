@@ -43,42 +43,35 @@ class Customer
     #[Groups(["getAllCustomersOfAUser", "getDetailCustomer", "newCustomer"])]
     #[Assert\NotBlank(message: "Votre nom est obligatoire")]
     #[Assert\Length(min: 1, max: 50, minMessage: "Votre nom doit faire au moins {{ limit }} caractères", maxMessage: "Votre nom ne peut pas faire plus de {{ limit }} caractères")]
-    #[OA\Property(type: 'string', maxLength: 50)]
     private ?string $name = null;
 
     #[ORM\Column(length: 50)]
     #[Groups(["getAllCustomersOfAUser", "getDetailCustomer", "newCustomer"])]
     #[Assert\NotBlank(message: "Votre prénom est obligatoire")]
     #[Assert\Length(min: 1, max: 50, minMessage: "Votre prénom doit faire au moins {{ limit }} caractères", maxMessage: "Votre prénom ne peut pas faire plus de {{ limit }} caractères")]
-    #[OA\Property(type: 'string', maxLength: 50)]
     private ?string $fistName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(["getDetailCustomer", "newCustomer"])]
-    #[OA\Property(type: 'string', maxLength: 255, nullable: true)]
     private ?string $adress = null;
 
     #[ORM\Column(nullable: true)]
     #[Groups(["getDetailCustomer", "newCustomer"])]
-    #[OA\Property(type: 'string', maxLength: 255, nullable: true)]
     private ?int $postCode = null;
 
     #[ORM\Column(length: 50, nullable: true)]
     #[Groups(["getDetailCustomer", "newCustomer"])]
-    #[OA\Property(type: 'string', maxLength: 255, nullable: true)]
     private ?string $city = null;
 
     #[ORM\Column(length: 255)]
     #[Groups(["getAllCustomersOfAUser", "getDetailCustomer", "newCustomer"])]
     #[Assert\NotBlank(message: "Votre email est obligatoire")]
     #[Assert\Length(min: 5, max: 255, minMessage: "Votre email doit faire au moins {{ limit }} caractères", maxMessage: "Votre email ne peut pas faire plus de {{ limit }} caractères")]
-    #[OA\Property(type: 'string', maxLength: 255)]
     private ?string $email = null;
 
     #[ORM\ManyToOne(inversedBy: 'customers')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(["getDetailCustomer", "newCustomer"])]
-    #[OA\Property(ref: new Model(type: User::class))]
     private ?User $user = null;
 
 
