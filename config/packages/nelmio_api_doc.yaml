@@ -17,9 +17,9 @@ nelmio_api_doc:
         paths:
             /api/login_check:
                 post:
-                    operationId: postCredentialsItem
                     tags:
                         - Token
+                    operationId: postCredentialsItem
                     summary: Permet d'obtenir le token JWT pour se logger.
                     requestBody:
                         description: Crée un nouveau token JWT
@@ -61,3 +61,5 @@ nelmio_api_doc:
     areas: # to filter documented areas
         path_patterns:
             - ^/api(?!/doc$) # Accepts routes under /api except /api/doc
+        # host_patterns: # document only routes with a host of the form api.*
+        #     - ^api\.

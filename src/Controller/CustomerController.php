@@ -4,7 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Customer;
 use App\Service\UserService;
-use OpenApi\Annotations as OA;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Operation;
+use Nelmio\ApiDocBundle\Annotation\Security;
+use OpenApi\Attributes as OA;
 use App\Service\CustomerService;
 use JMS\Serializer\SerializerInterface;
 use JMS\Serializer\SerializationContext;
@@ -28,54 +31,45 @@ class CustomerController extends AbstractController
 
     /**
      * Cette methode permet d'aller chercher le détail d'un utilisateur à partir son id
-     * 
-     * @Route("api/customers/{id}", methods={"GET"})
-     * 
-     * @OA\Response(
-     *     response=200,
-     *     description="Retourne le détail d'un téléphone",
-     *     @OA\JsonContent(
-     *        type="array",
-     *        @OA\Items(ref=@Model(type=Customer::class))
-     *     )
-     * )
-     * @OA\Tag(name="Customer")
-     *
-     * @param Customer $customer Customer
-     * 
-     * @return JsonResponse
      */
     #[Route('/api/customers/{id}', name: 'detailCustomer', methods: ['GET'])]
+    #[OA\Response(
+        response: 200,
+        description: 'Retourne le détail d\'un utilisateur',
+        content: new OA\JsonContent(
+            type: 'array',
+            items: new OA\Items(ref: new Model(type: Customer::class))
+        )
+    )]
+    #[OA\Tag(name: 'Customer')]
+
     public function getDetailCustomer(Customer $customer): JsonResponse
     {
 
         $context = SerializationContext::create()->setGroups(['getDetailCustomer']);
         $jsonCustomer = $this->serializer->serialize($customer, 'json', $context);
-        // return $this->json($jsonPhonesList, 200);
         return new JsonResponse($jsonCustomer, Response::HTTP_OK, [], true);
         
     }
 
     /**
      * Cette methode permet de créer un nouvel utilisateur et de le lier à un client
-     * 
-     * @Route("api/customers/{id}", methods={"POST"})
-     * 
-     * @OA\Response(
-     *     response=200,
-     *     description="Retourne le détail d'un téléphone",
-     *     @OA\JsonContent(
-     *        type="array",
-     *        @OA\Items(ref=@Model(type=Customer::class))
-     *     )
-     * )
-     * @OA\Tag(name="Customer")
-     *
-     * @param Customer $customer Customer
-     * 
-     * @return JsonResponse
      */
     #[Route('/api/customers', name: 'newCustomer', methods: ['POST'])]
+    #[OA\RequestBody(content: new OA\JsonContent(
+        type: 'array',
+        items: new OA\Items(ref: new Model(type: Customer::class, groups: ['newCustomer'])),)
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'Création un nouvel utilisateur',
+        content: new OA\JsonContent(
+            type: 'array',
+            items: new OA\Items(ref: new Model(type: Customer::class, groups: ['getDetailCustomer'])),
+        )
+    )]
+    #[OA\Tag(name: 'Customer')]
+
     public function newCustomer(Request $request): JsonResponse
     {
 
@@ -96,22 +90,18 @@ class CustomerController extends AbstractController
 
     /**
      * Cette methode permet de supprimer un utilisateur à partir son id
-     * 
-     * @Route("api/customers/{id}", methods={"DELETE"})
-     * 
-     * @OA\Response(
-     *     response=201,
-     *     description="Supprime un utilisateur",
-     *     @OA\JsonContent(
-     *        type="array",
-     *        @OA\Items(ref=@Model(type=Customer::class))
-     *     )
-     * )
-     * @OA\Tag(name="Customer")
-     *
-     * @param Customer $customer Customer
      */
     #[Route('/api/customers/{id}', name: 'deleteCustomer', methods: ['DELETE'])]
+    #[OA\Response(
+        response: 204,
+        description: 'Supprime un utilisateur',
+        content: new OA\JsonContent(
+            type: 'array',
+            items: new OA\Items(ref: new Model(type: Customer::class))
+        )
+    )]
+    #[OA\Tag(name: 'Customer')]
+
     public function deleteCustomer(Customer $customer): JsonResponse
     {
 
